@@ -8,7 +8,18 @@ var _ = require("underscore");
 
 module.exports = function(app){
 //write match function that takes new user's information req.body and compare the existing data in friends array.
-	function match(newinfo, infopool){
+//When api/friends is requested, write friends information to that page using json format
+	app.get("/api/friends", function(req, res){
+		res.json(friends);
+	});
+//When ap/friends is posted, add req.body information to friends, and return matched user's name and url.
+	app.post("/api/friends", function(req, res){
+		friends.push(req.body);
+		res.json(returninfo(friends,match(req.body, friends)));
+	});
+};
+
+function match(newinfo, infopool){
 		var newinfo_scores = newinfo.scores;
 		var each_diff = [];
 //loop through the existing friends array
@@ -27,19 +38,8 @@ module.exports = function(app){
 	};
 
 //call back function takes return index and get the name and url for that user.
-	function returninfo(infopool, index){
+function returninfo(infopool, index){
 		return infopool[index];
 	};
-//When api/friends is requested, write friends information to that page using json format
-	app.get("/api/friends", function(req, res){
-		res.json(friends);
-	});
-//When ap/friends is posted, add req.body information to friends, and return matched user's name and url.
-	app.post("/api/friends", function(req, res){
-		friends.push(req.body);
-		res.json(returninfo(friends,match(req.body, friends)));
-	});
-};
-
 
 
